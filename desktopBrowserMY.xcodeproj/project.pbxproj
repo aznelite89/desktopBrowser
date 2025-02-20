@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3697182C2D670F5F001B9995 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697182B2D670F5F001B9995 /* URL+Extensions.swift */; };
 		36B84E242D451CC900C099BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B84E232D451CC900C099BA /* AppDelegate.swift */; };
 		36B84E262D451CC900C099BA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B84E252D451CC900C099BA /* SceneDelegate.swift */; };
 		36B84E282D451CC900C099BA /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B84E272D451CC900C099BA /* HomeVC.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3697182B2D670F5F001B9995 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		36B84E202D451CC900C099BA /* desktopBrowserMY.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = desktopBrowserMY.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		36B84E232D451CC900C099BA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		36B84E252D451CC900C099BA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -42,6 +44,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3697182A2D670F2A001B9995 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				3697182B2D670F5F001B9995 /* URL+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		36B84E172D451CC900C099BA = {
 			isa = PBXGroup;
 			children = (
@@ -63,6 +73,7 @@
 		36B84E222D451CC900C099BA /* desktopBrowserMY */ = {
 			isa = PBXGroup;
 			children = (
+				3697182A2D670F2A001B9995 /* Extensions */,
 				36B84E382D45B87F00C099BA /* ViewController */,
 				36B84E372D451D8400C099BA /* Storyboard */,
 				36B84E232D451CC900C099BA /* AppDelegate.swift */,
@@ -96,7 +107,6 @@
 				D0413CB62118A60869899255 /* Pods-desktopBrowserMY.debug.xcconfig */,
 				55DDEEF1E00821D31D36EC3C /* Pods-desktopBrowserMY.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -119,6 +129,7 @@
 				36B84E1C2D451CC900C099BA /* Sources */,
 				36B84E1D2D451CC900C099BA /* Frameworks */,
 				36B84E1E2D451CC900C099BA /* Resources */,
+				60892083BCD9BB941722F897 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -176,6 +187,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		60892083BCD9BB941722F897 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desktopBrowserMY/Pods-desktopBrowserMY-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-desktopBrowserMY/Pods-desktopBrowserMY-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-desktopBrowserMY/Pods-desktopBrowserMY-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		852867E9E8D7E5EF4FD9ED8F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -206,6 +234,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				36B84E282D451CC900C099BA /* HomeVC.swift in Sources */,
+				3697182C2D670F5F001B9995 /* URL+Extensions.swift in Sources */,
 				36B84E242D451CC900C099BA /* AppDelegate.swift in Sources */,
 				36B84E262D451CC900C099BA /* SceneDelegate.swift in Sources */,
 			);

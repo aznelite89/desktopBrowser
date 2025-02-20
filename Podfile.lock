@@ -1,3 +1,16 @@
-PODFILE CHECKSUM: 5e904437968e6c56a7234a0c5f4ff6160fa4d247
+PODS:
+  - IHKeyboardAvoiding (4.7)
+
+DEPENDENCIES:
+  - IHKeyboardAvoiding
+
+SPEC REPOS:
+  trunk:
+    - IHKeyboardAvoiding
+
+SPEC CHECKSUMS:
+  IHKeyboardAvoiding: 4cae0880c3975feffa278495df894c5166e71ad0
+
+PODFILE CHECKSUM: 36d6ff03bcbd82c27dae518872e6c558228c1891
 
 COCOAPODS: 1.16.2
