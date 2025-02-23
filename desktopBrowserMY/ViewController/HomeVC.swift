@@ -31,24 +31,34 @@ class HomeVC: UIViewController {
             string: "Enter your Url here...",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor.gray]
         )
+        tf.returnKeyType = .go
         return tf
     }()
     let subAddressTextField: UITextField = {
         let tf = UITextField()
-        
+        tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
     }()
     let goButton: UIButton = {
         let btn = UIButton()
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.backgroundColor = .yellow
+        btn.setImage(UIImage(named: "goButton"), for: .normal)
         return btn
+    }()
+    let refreshButton: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(UIImage(named: "refreshButton"), for: .normal)
+        return btn
+    }()
+    let progressView: UIProgressView = {
+        let v = UIProgressView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
     }()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear(n:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
 
     override func viewDidLoad() {
@@ -59,14 +69,23 @@ class HomeVC: UIViewController {
     }
     
     fileprivate func setupViews() {
+        progressView.progressTintColor = UIColor.purple.withAlphaComponent(0.5)
+        view.addSubview(progressView)
+        webView.uiDelegate = self
         view.addSubview(webView)
         view.addSubview(addressView)
         addressView.addSubview(addressTextField)
         view.addSubview(goButton)
-        view.keyboardLayoutGuide.followsUndockedKeyboard = true
+        view.addSubview(refreshButton)
+        // view arrangement setup
         addressView.keyboardLayoutGuide.followsUndockedKeyboard = true
+        view.bringSubviewToFront(progressView)
         // setup auto layout constraints
         NSLayoutConstraint.activate([
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            progressView.heightAnchor.constraint(equalToConstant: 8),
             webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -83,11 +102,18 @@ class HomeVC: UIViewController {
             goButton.leadingAnchor.constraint(equalTo: addressView.trailingAnchor, constant: 12),
             goButton.centerYAnchor.constraint(equalTo: addressView.centerYAnchor),
             goButton.widthAnchor.constraint(equalToConstant: 36),
-            goButton.heightAnchor.constraint(equalToConstant: 36)
+            goButton.heightAnchor.constraint(equalToConstant: 36),
+            refreshButton.trailingAnchor.constraint(equalTo: addressView.leadingAnchor, constant: -12),
+            refreshButton.centerYAnchor.constraint(equalTo: addressView.centerYAnchor),
+            refreshButton.widthAnchor.constraint(equalToConstant: 36),
+            refreshButton.heightAnchor.constraint(equalToConstant: 36)
         ])
         // setup gestures
         goButton.addTarget(self, action: #selector(handleGoTapped), for: .touchUpInside)
+        refreshButton.addTarget(self, action: #selector(handleRefreshTapped), for: .touchUpInside)
         
+        // setup observers
+        webView.addObserver(self, forKeyPath: "estimatedProgress", context: nil)
     }
     
     fileprivate func setupDelegate() {
@@ -109,9 +135,7 @@ class HomeVC: UIViewController {
                     self.webView.load(URLRequest(url: url))
                 }
             } else {
-                print("INVALID URL")
                 if let searchUrl = URL(string: "https://www.google.com/search?q=\(text.replacingOccurrences(of: " ", with: "+"))") {
-                    print("search url: \(searchUrl)")
                     DispatchQueue.main.async {
                         self.webView.load(URLRequest(url: searchUrl))
                     }
@@ -122,14 +146,8 @@ class HomeVC: UIViewController {
         }
     }
     
-    @objc func keyboardWillAppear(n: NSNotification) {
-        //Do something here
-        print("keyboard showing.. \(n)")
-    }
-
-    @objc func keyboardWillDisappear() {
-        //Do something here
-        print("hide keyboard...")
+    @objc func handleRefreshTapped() {
+        webView.reload()
     }
     
 }
@@ -137,8 +155,23 @@ class HomeVC: UIViewController {
 extension HomeVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
-        
         handleGoTapped()
         return false
+    }
+}
+
+extension HomeVC: WKUIDelegate {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "estimatedProgress" {
+            print(webView.estimatedProgress)
+            progressView.progress = Float(webView.estimatedProgress)
+            if progressView.progress == 1.0 {
+                UIView.animate(withDuration: 3.0, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {
+                    self.progressView.alpha = 0
+                }
+            } else {
+                progressView.alpha = 1
+            }
+        }
     }
 }
