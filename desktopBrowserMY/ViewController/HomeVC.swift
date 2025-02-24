@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import RealmSwift
 
 class HomeVC: UIViewController {
     let webView: WKWebView = {
@@ -53,8 +54,20 @@ class HomeVC: UIViewController {
     }()
     let progressView: UIProgressView = {
         let v = UIProgressView()
+        v.progressTintColor = UIColor.purple.withAlphaComponent(0.5)
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
+    }()
+    let topPanelView: UIView = {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        return v
+    }()
+    let favouriteButton: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(UIImage(named: "favOff"), for: .normal)
+        return btn
     }()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,13 +79,14 @@ class HomeVC: UIViewController {
         setupViews()
         configureWebView()
         setupDelegate()
+        checkIfBookmarked()
     }
     
     fileprivate func setupViews() {
-        progressView.progressTintColor = UIColor.purple.withAlphaComponent(0.5)
-        view.addSubview(progressView)
-        webView.uiDelegate = self
+        view.addSubview(topPanelView)
+        topPanelView.addSubview(favouriteButton)
         view.addSubview(webView)
+        view.addSubview(progressView)
         view.addSubview(addressView)
         addressView.addSubview(addressTextField)
         view.addSubview(goButton)
@@ -82,14 +96,22 @@ class HomeVC: UIViewController {
         view.bringSubviewToFront(progressView)
         // setup auto layout constraints
         NSLayoutConstraint.activate([
-            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topPanelView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topPanelView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            topPanelView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            topPanelView.heightAnchor.constraint(equalToConstant: 50),
+            favouriteButton.leadingAnchor.constraint(equalTo: topPanelView.leadingAnchor, constant: 32),
+            favouriteButton.centerYAnchor.constraint(equalTo: topPanelView.centerYAnchor),
+            favouriteButton.heightAnchor.constraint(equalToConstant: 36),
+            favouriteButton.widthAnchor.constraint(equalToConstant: 36),
+            webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            progressView.topAnchor.constraint(equalTo: webView.topAnchor),
             progressView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             progressView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             progressView.heightAnchor.constraint(equalToConstant: 8),
-            webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
             addressView.topAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor, constant: -40),
             addressView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             addressView.widthAnchor.constraint(equalToConstant: 230),
@@ -111,12 +133,14 @@ class HomeVC: UIViewController {
         // setup gestures
         goButton.addTarget(self, action: #selector(handleGoTapped), for: .touchUpInside)
         refreshButton.addTarget(self, action: #selector(handleRefreshTapped), for: .touchUpInside)
+        favouriteButton.addTarget(self, action: #selector(handleFavouriteTapped), for: .touchUpInside)
         
         // setup observers
         webView.addObserver(self, forKeyPath: "estimatedProgress", context: nil)
     }
     
     fileprivate func setupDelegate() {
+        webView.uiDelegate = self
         addressTextField.delegate = self
     }
     
@@ -144,14 +168,62 @@ class HomeVC: UIViewController {
                     
             }
         }
+        checkIfBookmarked()
     }
     
     @objc func handleRefreshTapped() {
         webView.reload()
     }
     
+    @objc func handleFavouriteTapped() {
+        print("tapped favourite...")
+        do {
+            let realm = try Realm()
+            let aBookmark = Bookmark()
+            if let websiteUrl = addressTextField.text {
+                aBookmark.url = websiteUrl
+                aBookmark.title = webView.title ?? websiteUrl
+                let sameBookmarks = realm.objects(Bookmark.self).filter("url == '\(addressTextField.text!)'")
+                // add to bookmark list if its new url
+                if sameBookmarks.count == 0 {
+                    try! realm.write {
+                        realm.add(aBookmark)
+                    }
+                    favouriteButton.setImage(UIImage(named: "favOn"), for: .normal)
+                } else {
+                    // if got existing, remove from favourite
+                    if let bookmark = sameBookmarks.first {
+                        try! realm.write {
+                            realm.delete(bookmark)
+                        }
+                    }
+                    favouriteButton.setImage(UIImage(named: "favOff"), for: .normal)
+                }
+                
+            }
+        } catch {
+            print("Realm error")
+        }
+    }
+    
+    fileprivate func checkIfBookmarked() {
+        if let url = webView.url {
+            print("CURRENT WEB VIEW URL: \(url)")
+            do {
+                let realm = try Realm()
+                let results = realm.objects(Bookmark.self).filter("url == '\(addressTextField.text!)'")
+                
+                if results.count > 0 {
+                    favouriteButton.setImage(UIImage(named: "favOn"), for: .normal)
+                }
+            } catch {
+                print("Realm error while check bookmark")
+            }
+        }
+    }
+    
 }
-
+// MARK: UITextField delegate methods
 extension HomeVC: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.view.endEditing(true)
@@ -159,11 +231,10 @@ extension HomeVC: UITextFieldDelegate {
         return false
     }
 }
-
+// MARK: WKWebVIew delegate methods
 extension HomeVC: WKUIDelegate {
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "estimatedProgress" {
-            print(webView.estimatedProgress)
             progressView.progress = Float(webView.estimatedProgress)
             if progressView.progress == 1.0 {
                 UIView.animate(withDuration: 3.0, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut) {

@@ -5,7 +5,8 @@
 inhibit_all_warnings!
 
 def project_pods
-  pod 'IHKeyboardAvoiding'
+  pod 'RealmSwift', '20.0.1'
+  pod 'Toast-Swift', '5.1.1'
 end
 
 target 'desktopBrowserMY' do

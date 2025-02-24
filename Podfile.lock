@@ -1,16 +1,26 @@
 PODS:
-  - IHKeyboardAvoiding (4.7)
+  - Realm (20.0.1):
+    - Realm/Headers (= 20.0.1)
+  - Realm/Headers (20.0.1)
+  - RealmSwift (20.0.1):
+    - Realm (= 20.0.1)
+  - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - IHKeyboardAvoiding
+  - RealmSwift (= 20.0.1)
+  - Toast-Swift (= 5.1.1)
 
 SPEC REPOS:
   trunk:
-    - IHKeyboardAvoiding
+    - Realm
+    - RealmSwift
+    - Toast-Swift
 
 SPEC CHECKSUMS:
-  IHKeyboardAvoiding: 4cae0880c3975feffa278495df894c5166e71ad0
+  Realm: 9572204903ef28caeb3c03bb30c1147f354ee3e7
+  RealmSwift: d230b44017a55a1ba97de6a944da1fe3bedb92b5
+  Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 36d6ff03bcbd82c27dae518872e6c558228c1891
+PODFILE CHECKSUM: 9106d6049903d9f337ed23955ced8d670f6d2e31
 
 COCOAPODS: 1.16.2
