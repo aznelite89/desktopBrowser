@@ -69,6 +69,18 @@ class HomeVC: UIViewController {
         btn.setImage(UIImage(named: "favOff"), for: .normal)
         return btn
     }()
+    let backButton: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(UIImage(named: "prevButton"), for: .normal)
+        return btn
+    }()
+    let optionButton: UIButton = {
+        let btn = UIButton()
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(UIImage(named: "options"), for: .normal)
+        return btn
+    }()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -84,7 +96,9 @@ class HomeVC: UIViewController {
     
     fileprivate func setupViews() {
         view.addSubview(topPanelView)
+        topPanelView.addSubview(backButton)
         topPanelView.addSubview(favouriteButton)
+        topPanelView.addSubview(optionButton)
         view.addSubview(webView)
         view.addSubview(progressView)
         view.addSubview(addressView)
@@ -100,10 +114,18 @@ class HomeVC: UIViewController {
             topPanelView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             topPanelView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             topPanelView.heightAnchor.constraint(equalToConstant: 50),
-            favouriteButton.leadingAnchor.constraint(equalTo: topPanelView.leadingAnchor, constant: 32),
+            backButton.leadingAnchor.constraint(equalTo: topPanelView.leadingAnchor, constant: 32),
+            backButton.centerYAnchor.constraint(equalTo: topPanelView.centerYAnchor),
+            backButton.heightAnchor.constraint(equalToConstant: 36),
+            backButton.widthAnchor.constraint(equalToConstant: 36),
+            favouriteButton.leadingAnchor.constraint(equalTo: backButton.trailingAnchor, constant: 16),
             favouriteButton.centerYAnchor.constraint(equalTo: topPanelView.centerYAnchor),
             favouriteButton.heightAnchor.constraint(equalToConstant: 36),
             favouriteButton.widthAnchor.constraint(equalToConstant: 36),
+            optionButton.trailingAnchor.constraint(equalTo: topPanelView.trailingAnchor, constant: -32),
+            optionButton.centerYAnchor.constraint(equalTo: topPanelView.centerYAnchor),
+            optionButton.heightAnchor.constraint(equalToConstant: 36),
+            optionButton.widthAnchor.constraint(equalToConstant: 36),
             webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
@@ -134,6 +156,8 @@ class HomeVC: UIViewController {
         goButton.addTarget(self, action: #selector(handleGoTapped), for: .touchUpInside)
         refreshButton.addTarget(self, action: #selector(handleRefreshTapped), for: .touchUpInside)
         favouriteButton.addTarget(self, action: #selector(handleFavouriteTapped), for: .touchUpInside)
+        backButton.addTarget(self, action: #selector(handleBackTapped), for: .touchUpInside)
+        optionButton.addTarget(self, action: #selector(handleOptionTapped), for: .touchUpInside)
         
         // setup observers
         webView.addObserver(self, forKeyPath: "estimatedProgress", context: nil)
@@ -173,6 +197,18 @@ class HomeVC: UIViewController {
     
     @objc func handleRefreshTapped() {
         webView.reload()
+    }
+    
+    @objc func handleBackTapped() {
+        webView.goBack()
+    }
+    
+    @objc func handleOptionTapped() {
+        if OptionsView.sharedView.isDescendant(of: view) {
+            OptionsView.sharedView.animateOut()
+        } else {
+            OptionsView.sharedView.animateIn(parentView: view)
+        }
     }
     
     @objc func handleFavouriteTapped() {

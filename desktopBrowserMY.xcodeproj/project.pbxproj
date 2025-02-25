@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		363F54CE2D6C87C300B6E692 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 363F54CD2D6C87B000B6E692 /* OptionsView.swift */; };
 		36763D732D6B46A9000A20E5 /* Bookmarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36763D722D6B46A9000A20E5 /* Bookmarks.swift */; };
 		3697182C2D670F5F001B9995 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3697182B2D670F5F001B9995 /* URL+Extensions.swift */; };
 		36B84E242D451CC900C099BA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B84E232D451CC900C099BA /* AppDelegate.swift */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		363F54CD2D6C87B000B6E692 /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		36763D722D6B46A9000A20E5 /* Bookmarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmarks.swift; sourceTree = "<group>"; };
 		3697182B2D670F5F001B9995 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
 		36B84E202D451CC900C099BA /* desktopBrowserMY.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = desktopBrowserMY.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +48,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		363F54CC2D6C87A400B6E692 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				363F54CD2D6C87B000B6E692 /* OptionsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		36763D712D6B459E000A20E5 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +93,7 @@
 		36B84E222D451CC900C099BA /* desktopBrowserMY */ = {
 			isa = PBXGroup;
 			children = (
+				363F54CC2D6C87A400B6E692 /* Views */,
 				36763D712D6B459E000A20E5 /* Data */,
 				3697182A2D670F2A001B9995 /* Extensions */,
 				36B84E382D45B87F00C099BA /* ViewController */,
@@ -245,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				36B84E282D451CC900C099BA /* HomeVC.swift in Sources */,
+				363F54CE2D6C87C300B6E692 /* OptionsView.swift in Sources */,
 				36763D732D6B46A9000A20E5 /* Bookmarks.swift in Sources */,
 				3697182C2D670F5F001B9995 /* URL+Extensions.swift in Sources */,
 				36B84E242D451CC900C099BA /* AppDelegate.swift in Sources */,
